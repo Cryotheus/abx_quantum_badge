@@ -64,7 +64,7 @@ local function fetch_completed(body, headers, ...)
 	
 	local post_fix = table.remove(fetch_list)
 	
-	if body then
+	if body and post_fix then
 		developer_print("[AQB] Got raw data for source " .. post_fix)
 		
 		for index, line in ipairs(string.Split(body, "\n")) do
