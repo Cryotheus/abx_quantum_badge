@@ -58,7 +58,7 @@ local function fetch_all(no_request)
 	else fetch_pastebin() end
 end
 
-local function fetch_completed(body, headers, ...)
+local function fetch_completed(body, headers)
 	--we got the fetch, parse it
 	fetch_fails = 0
 	
@@ -90,7 +90,7 @@ local function fetch_completed(body, headers, ...)
 end
 
 local function fetch_fail(...)
-	--if we fail, give 3 retries, and then jsut skip it
+	--if we fail, give 3 retries, and then just skip it
 	if fetch_fails >= max_fetch_fails then
 		fetch_fails = 0
 		
@@ -177,13 +177,6 @@ autobox.badge:RegisterBadge("quantum", "Quantum", "Posses the Quantum badge.", 1
 end)
 
 hook.Add("InitPostEntity", "abx_quantum_badge", function()
-	--call it a second later because people like to network their crap here
-	--also give it an id so people can stop the timer if needed
-	if CLIENT then
-		net.Start("abx_quantum_badge")
-		net.SendToServer()
-	end
-	
 	timer.Create("abx_quantum_badge", 1, 1, function()
 		if autobox.badge and autobox.badge.badges then
 			for key, badge in pairs(autobox.badge.badges) do
@@ -200,10 +193,14 @@ hook.Add("InitPostEntity", "abx_quantum_badge", function()
 						})
 				end
 			end
+			
+			--call it a second later because people like to network their crap here
+			--also give it an id so people can stop the timer if needed
+			if CLIENT then
+				net.Start("abx_quantum_badge")
+				net.SendToServer()
+			end
 		end
-		
-		--fetch pastebin badges
-		if CLIENT then fetch_all() end
 	end)
 end)
 
